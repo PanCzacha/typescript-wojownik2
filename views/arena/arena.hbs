@@ -1,0 +1,18 @@
+<h2>Lista Wojowników - tu wybierasz pary do walk</h2>
+<h3>Pamiętaj, możesz wybrać dowolnych dwóch wojowników, lecz nie tych samych.</h3>
+<div>
+    <form action="arena/fight" method="POST">
+        <select name="war1Id">
+            {{#each allWarriors}}
+                <option value="{{this.id}}">{{this.name}}</option>
+            {{/each}}
+        </select>
+        <select name="war2Id">
+            {{#each allWarriors}}
+                <option value="{{this.id}}">{{this.name}}</option>
+            {{/each}}
+        </select>
+
+        <button type="submit">WALCZ</button>
+    </form>
+</div>

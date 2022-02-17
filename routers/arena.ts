@@ -3,23 +3,16 @@ import {WarriorRecord} from "../records/warrior.record";
 import {ValidationError} from "../utils/error";
 import {Arena} from "../libs/arena";
 
-export const warriorRouter: Router = Router();
+export const arenaRouter: Router = Router();
 
-warriorRouter
-    .get("/", async (req, res, next) => {
-       const allWarriors = await WarriorRecord.listAll();
-       res.render("warrior/warrior-main.hbs", {
-           allWarriors,
-       })
-    })
-    .get("/fame", async  (req, res, next) => {
+arenaRouter
+    .get("/", async (req, res) => {
         const allWarriors = await WarriorRecord.listAll();
-        res.render("warrior/hall-of-fame.hbs", {
+        res.render("arena/arena.hbs", {
             allWarriors,
-            msg: "Wróć do strony głównej."
         })
     })
-    .post("/fight", async (req, res, next) => {
+    .post("/fight", async (req, res) => {
         const {war1Id, war2Id} = req.body;
 
         if(war1Id === war2Id) {
@@ -30,15 +23,8 @@ warriorRouter
         const goToArena = new Arena(war1, war2);
         const log = await goToArena.fight();
 
-        res.render("warrior/results", {
+        res.render("arena/results.hbs", {
             log,
             msg: "Wróć do strony głównej."
         })
-    })
-    .post("/add", async (req, res, next) => {
-        const warriorToAdd = new WarriorRecord(req.body);
-        await warriorToAdd.insert();
-        res.render("partials/back", {
-            msg: "Dodano nowego wojownika!"
-        });
-    })
+    });
