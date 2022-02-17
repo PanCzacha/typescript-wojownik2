@@ -20,6 +20,12 @@ arenaRouter
         }
         const war1 = await WarriorRecord.findOne(war1Id);
         const war2 = await WarriorRecord.findOne(war2Id);
+        if(!war1) {
+            throw new ValidationError("Nie znaleziono wojownika nr 1")
+        }
+        if(!war2) {
+            throw new ValidationError("Nie znaleziono wojownika nr 2")
+        }
         const goToArena = new Arena(war1, war2);
         const log = await goToArena.fight();
 

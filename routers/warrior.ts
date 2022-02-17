@@ -8,7 +8,14 @@ warriorRouter
         res.render("warrior/warrior.hbs")
     })
     .post("/", async (req, res) => {
-        const warriorToAdd = new WarriorRecord(req.body);
+        const {strength, endurance, agility, defense} = req.body;
+        const warriorToAdd = new WarriorRecord({
+            ...req.body,
+            strength: Number(strength),
+            endurance: Number(endurance),
+            agility: Number(agility),
+            defense: Number(defense),
+        });
         await warriorToAdd.insert();
         res.render("partials/back", {
             msg: "Dodano nowego wojownika!"

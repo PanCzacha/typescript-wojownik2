@@ -16,16 +16,15 @@ export class WarriorRecord implements WarriorEntity{
     public victories?: number;
 
     constructor(obj: WarriorEntity) {
-
-        this.id = obj.id;
+        this.id = obj.id ?? uuid();
         this.name = obj.name;
-        this.strength = Number(obj.strength);
-        this.defense = Number(obj.defense);
-        this.endurance = Number(obj.endurance);
-        this.agility = Number(obj.agility);
+        this.strength = obj.strength;
+        this.defense = obj.defense;
+        this.endurance = obj.endurance;
+        this.agility = obj.agility;
         this.hp = this.endurance * 10;
         this.dp = this.defense;
-        this.victories = obj.victories;
+        this.victories = obj.victories ?? 0;
 
     }
 
@@ -35,6 +34,9 @@ export class WarriorRecord implements WarriorEntity{
         }
         if(this.strength + this.agility + this.defense + this.endurance !== 10) {
             throw new ValidationError("Suma punktów w statystykach musi wynosić 10")
+        }
+        if(this.name.length < 3 || this.name.length > 50) {
+            throw new ValidationError("Imie musi mieć conajmniej 3 znaki i nie więcej niż 50 znaków.")
         }
         const warriors = await WarriorRecord.listAll();
         const foundName =  warriors
@@ -47,14 +49,6 @@ export class WarriorRecord implements WarriorEntity{
 
     async insert(): Promise<string> {
         await this._verify();
-
-        if(!this.id) {
-            this.id = uuid();
-        }
-
-        if (!this.victories) {
-            this.victories = 0;
-        }
 
         await pool.execute("INSERT INTO `warriors` VALUES(:id, :name, :strength, :defense, :endurance, :agility, :hp, :dp, :victories)", {
             id: this.id,
